@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Notiz wird in Obsidian geöffnet …</title>
+<style>
+  body { font-family: -apple-system, system-ui, sans-serif; display: flex;
+         justify-content: center; align-items: center; min-height: 100vh;
+         margin: 0; background: #1e1e2e; color: #cdd6f4; }
+  .card { text-align: center; padding: 2rem; max-width: 32rem; }
+  a.button { display: inline-block; margin-top: 1rem; padding: .6rem 1.2rem;
+             background: #89b4fa; color: #1e1e2e; text-decoration: none;
+             border-radius: .4rem; font-weight: 600; }
+  .file { font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-size: .9rem; color: #a6adc8; word-break: break-all; }
+  .hint { margin-top: 1.5rem; font-size: .85rem; color: #7f849c; }
+</style>
+</head>
+<body>
+<div class="card">
+  <p id="status">Öffne Obsidian …</p>
+  <p class="file" id="file-line"></p>
+  <div id="fallback" hidden>
+    <a id="obsidian-link" class="button" href="#">In Obsidian öffnen</a>
+    <p class="hint">
+      Du brauchst Obsidian Desktop oder Mobile mit dem Vault
+      <code id="vault-name">Avisum</code>.
+    </p>
+  </div>
+  <noscript><p>JavaScript ist nötig für die Weiterleitung.</p></noscript>
+</div>
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var file = params.get("file");
+  var vault = params.get("vault") || "Avisum";
+
+  document.getElementById("vault-name").textContent = vault;
+
+  if (!file) {
+    document.getElementById("status").textContent =
+      "Kein ?file= Parameter — der Link ist unvollständig.";
+    return;
+  }
+
+  document.getElementById("file-line").textContent = file;
+
+  var uri = "obsidian://open?vault=" + encodeURIComponent(vault)
+          + "&file=" + encodeURIComponent(file);
+
+  var link = document.getElementById("obsidian-link");
+  link.href = uri;
+
+  window.location.href = uri;
+
+  // Auto-redirect didn't fire (mobile in-app browsers, popup blocker, …)
+  // → reveal the manual button after a second.
+  setTimeout(function () {
+    document.getElementById("status").textContent =
+      "Obsidian hat sich nicht automatisch geöffnet — bitte tippen:";
+    document.getElementById("fallback").hidden = false;
+  }, 1000);
+})();
+</script>
+</body>
+</html>
