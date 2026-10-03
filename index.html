@@ -26,7 +26,7 @@
     <a id="obsidian-link" class="button" href="#">In Obsidian öffnen</a>
     <p class="hint">
       Du brauchst Obsidian Desktop oder Mobile mit dem Vault
-      <code id="vault-name">Avisum</code>.
+      <code id="vault-name">Brinkor</code>.
     </p>
   </div>
   <noscript><p>JavaScript ist nötig für die Weiterleitung.</p></noscript>
@@ -35,7 +35,14 @@
 (function () {
   var params = new URLSearchParams(window.location.search);
   var file = params.get("file");
-  var vault = params.get("vault") || "Avisum";
+  var vault = params.get("vault") || "Brinkor";
+
+  // The team vault was renamed Avisum → Brinkor on 2026-10-03 (local folder
+  // name on every device; the Obsidian-Sync remote vault kept its old name).
+  // Links posted before that day still carry vault=Avisum — map them so the
+  // chat/mail archive stays clickable.
+  var ALIASES = { "Avisum": "Brinkor" };
+  if (ALIASES[vault]) { vault = ALIASES[vault]; }
 
   document.getElementById("vault-name").textContent = vault;
 
