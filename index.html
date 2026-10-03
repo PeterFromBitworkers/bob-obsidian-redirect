@@ -37,12 +37,17 @@
   var file = params.get("file");
   var vault = params.get("vault") || "Brinkor";
 
-  // The team vault was renamed Avisum → Brinkor on 2026-10-03 (local folder
-  // name on every device; the Obsidian-Sync remote vault kept its old name).
-  // Links posted before that day still carry vault=Avisum — map them so the
-  // chat/mail archive stays clickable.
+  // The team vault is being renamed Avisum → Brinkor (2026-10-03; local
+  // folder name on every device, the Obsidian-Sync remote vault keeps its
+  // old name). Links posted before the cutover carry vault=Avisum — once
+  // every device has renamed, map them so the chat/mail archive stays
+  // clickable. CUTOVER SWITCH: flip ALIASES_ENABLED to true on the day the
+  // whole team has renamed (together with OBSIDIAN_DEFAULT_VAULT=Brinkor
+  // on mini-server). Before that, vault=Avisum must stay Avisum, or every
+  // device that has not renamed yet gets "vault not found" on every link.
+  var ALIASES_ENABLED = false;
   var ALIASES = { "Avisum": "Brinkor" };
-  if (ALIASES[vault]) { vault = ALIASES[vault]; }
+  if (ALIASES_ENABLED && ALIASES[vault]) { vault = ALIASES[vault]; }
 
   document.getElementById("vault-name").textContent = vault;
 
